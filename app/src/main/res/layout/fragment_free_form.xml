@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.gamut.android.views.ColorPickerGrid
+        android:id="@+id/color_picker_grid"
+        android:layout_width="match_parent"
+        android:layout_margin="10dp"
+        android:layout_height="150dp" />
+
+    <com.gamut.android.views.ColorGrid
+        android:layout_below="@+id/color_picker_grid"
+        android:id="@+id/color_grid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"/>
+
+</RelativeLayout>
