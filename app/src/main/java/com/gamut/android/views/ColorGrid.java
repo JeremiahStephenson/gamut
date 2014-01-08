@@ -4,8 +4,11 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.RectF;
+import android.os.AsyncTask;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -21,6 +24,8 @@ public class ColorGrid extends View {
     public static int NUM_ROWS = 32;
     private static float PADDING = 0.1F;
     private Paint _paint;
+
+    private float mScale = 8f / 32f;
 
     private List<ColorCell> mCells;
     private ColorCell mCurrent;
@@ -109,11 +114,11 @@ public class ColorGrid extends View {
             if (cell.getColor() != Color.BLACK) {
                 _paint.setColor(cell.getColor());
                 _paint.setStyle(Paint.Style.FILL);
-                canvas.drawRoundRect (cell.getRect(), 20, 20, _paint);
+                canvas.drawRoundRect (cell.getRect(), 20 * mScale, 20 * mScale, _paint);
             } else {
                 _paint.setStyle(Paint.Style.STROKE);
                 _paint.setColor(Color.GRAY);
-                canvas.drawRoundRect(cell.getRect(), 20, 20, _paint);
+                canvas.drawRoundRect(cell.getRect(), 20 * mScale, 20 * mScale, _paint);
             }
         }
     }
@@ -134,6 +139,8 @@ public class ColorGrid extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+
+        Log.d("Gamut test", String.valueOf(event.getX()) + ", " + String.valueOf(event.getY()));
 
         for (ColorCell cell : mCells) {
 
@@ -162,7 +169,10 @@ public class ColorGrid extends View {
             }
         }
 
-        invalidate ();
+        final Rect rect = new Rect();
+        final RectF rectF = mCurrent.getRect();
+        rect.set((int)rectF.left - 1, (int)rectF.top - 1, (int)rectF.right + 1, (int)rectF.bottom + 1);
+        invalidate(rect);
 
         return true;
     }
