@@ -19,7 +19,8 @@
 
         <activity
             android:name=".activities.FreeFormActivity"
-            android:label="@string/free_form"/>
+            android:label="@string/free_form"
+            android:screenOrientation="sensorPortrait"/>
 
     </application>
 
