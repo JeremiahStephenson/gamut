@@ -167,12 +167,6 @@ public class ColorGrid extends View {
         canvas.restore();
 
         rect = canvas.getClipBounds();
-
-        // redraw
-        // if (animating) {
-        //getRootView().invalidate();
-        //invalidate();
-        // }
     }
 
     public void setColorOnPixel(int column, int row) {
@@ -191,8 +185,6 @@ public class ColorGrid extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-
-        //mScaleDetector.onTouchEvent(event);
 
         // // double touch
         if (event.getPointerCount() == 2) {
