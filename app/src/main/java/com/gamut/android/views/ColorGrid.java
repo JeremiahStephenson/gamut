@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -31,6 +32,8 @@ public class ColorGrid extends View {
     // touching variables
     private Rect rect;
     private float startd;
+    private float startx = -1;
+    private float starty = -1;
     private boolean pinching;
     private float lastd;
     private float lastdx1, lastdy1;
@@ -38,7 +41,16 @@ public class ColorGrid extends View {
 
     // drawing
     private final Matrix m = new Matrix();
-    private final Paint p = new Paint();
+
+    private boolean isLocked = false;
+
+    public void setIsLocked(boolean lock) {
+        isLocked = lock;
+    }
+
+    public boolean getIsLocked() {
+        return isLocked;
+    }
 
     public static int NUM_COLUMNS = 32;
     public static int NUM_ROWS = 32;
@@ -111,8 +123,7 @@ public class ColorGrid extends View {
         zoomX = lerp(bias(zoomX, smoothZoomX, 0.1f), smoothZoomX, 0.35f);
         zoomY = lerp(bias(zoomY, smoothZoomY, 0.1f), smoothZoomY, 0.35f);
 
-        final boolean animating = Math.abs(zoom - smoothZoom) > 0.0000001f
-                || Math.abs(zoomX - smoothZoomX) > 0.0000001f || Math.abs(zoomY - smoothZoomY) > 0.0000001f;
+        Log.d("Zoom Test", zoomX + ", " + zoomY);
 
         // prepare matrix
         m.setTranslate(0.5f * getWidth(), 0.5f * getHeight());
@@ -193,7 +204,7 @@ public class ColorGrid extends View {
 
         RectF test = new RectF();
 
-        if (event.getPointerCount() == 1) {
+        if (event.getPointerCount() == 1 && !isLocked) {
 
             for (ColorCell cell : mCells) {
 
@@ -269,13 +280,17 @@ public class ColorGrid extends View {
         final float dy2 = y2 - lastdy2;
         lastdy2 = y2;
 
+        if (startx == -1 && starty == -1) {
+            startx = (x1 + x2) / 2;
+            starty = (y1 + y2) / 2;
+        }
+
         // pointers distance
         final float d = (float) Math.hypot(x2 - x1, y2 - y1);
         final float dd = d - lastd;
         lastd = d;
         final float ld = Math.abs(d - startd);
 
-        Math.atan2(y2 - y1, x2 - x1);
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 startd = d;
@@ -294,6 +309,8 @@ public class ColorGrid extends View {
 
             case MotionEvent.ACTION_UP:
             default:
+                startx = -1;
+                starty = -1;
                 pinching = false;
                 break;
         }

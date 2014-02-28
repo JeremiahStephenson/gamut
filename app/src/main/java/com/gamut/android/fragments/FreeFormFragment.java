@@ -63,6 +63,10 @@ public class FreeFormFragment extends Fragment implements ColorPickerGrid.IOnCol
             case R.id.menu_clear:
                 mColorGrid.clear();
                 break;
+            case R.id.menu_lock:
+                item.setTitle(getString(mColorGrid.getIsLocked() ? R.string.lock : R.string.locked));
+                mColorGrid.setIsLocked(!mColorGrid.getIsLocked());
+                break;
         }
 
         return super.onOptionsItemSelected(item);

@@ -1,27 +1,25 @@
 package com.gamut.android;
 
-import android.app.Activity;
-;
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.Gravity;
+import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.support.v4.widget.DrawerLayout;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.gamut.android.activities.FreeFormActivity;
 import com.gamut.android.activities.MasterActivity;
+import com.gamut.android.fragments.DeviceListFragment;
 import com.gamut.android.fragments.FreeFormFragment;
+
+;
 
 public class MainActivity extends MasterActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -50,7 +48,16 @@ public class MainActivity extends MasterActivity
     @Override
     public void onNavigationDrawerItemSelected(int position) {
 
-        final Fragment frag = PlaceholderFragment.newInstance(position + 1);
+        Fragment frag;
+
+        switch (position) {
+            case 0:
+                frag = new DeviceListFragment();
+                break;
+            default:
+                frag = PlaceholderFragment.newInstance(position + 1);
+
+        }
 
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
