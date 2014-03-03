@@ -2,6 +2,7 @@ package com.gamut.android.fragments;
 
 import android.app.Activity;
 import android.app.ListFragment;
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
@@ -18,10 +19,15 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.gamut.android.R;
+import com.gamut.android.activities.FreeFormActivity;
 import com.gamut.android.adapters.LeDeviceListAdapter;
+import com.gamut.android.events.BluetoothGattEvent;
+import com.gamut.android.services.BluetoothLeService;
 import com.gamut.android.util.GattAttributes;
 
 import java.util.UUID;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by jeremiahstephenson on 2/3/14.
@@ -32,6 +38,8 @@ public class DeviceListFragment extends ListFragment {
     private BluetoothAdapter mBluetoothAdapter;
     private boolean mScanning;
     private Handler mHandler;
+
+    private ProgressDialog mProgress;
 
     private static final int REQUEST_ENABLE_BT = 1;
     // Stops scanning after 10 seconds.
@@ -101,6 +109,8 @@ public class DeviceListFragment extends ListFragment {
     public void onResume() {
         super.onResume();
 
+        EventBus.getDefault().register(this);
+
         // Ensures Bluetooth is enabled on the device.  If Bluetooth is not currently enabled,
         // fire an intent to display a dialog asking the user to grant permission to enable it.
         if (!mBluetoothAdapter.isEnabled()) {
@@ -129,6 +139,7 @@ public class DeviceListFragment extends ListFragment {
     @Override
     public void onPause() {
         super.onPause();
+        EventBus.getDefault().unregister(this);
         scanLeDevice(false);
         mLeDeviceListAdapter.clear();
     }
@@ -136,15 +147,39 @@ public class DeviceListFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         final BluetoothDevice device = mLeDeviceListAdapter.getDevice(position);
-        if (device == null) return;
-//        final Intent intent = new Intent(getActivity(), DeviceControlActivity.class);
-//        intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_NAME, device.getName());
-//        intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
+        if (device == null || getActivity() == null) return;
+
+        mProgress = new ProgressDialog(getActivity());
+        mProgress.setTitle(getString(R.string.connecting));
+        mProgress.setCancelable(false);
+        mProgress.show();
+
+        BluetoothLeService.getInstance().connect(device.getAddress());
+
         if (mScanning) {
             mBluetoothAdapter.stopLeScan(mLeScanCallback);
             mScanning = false;
+
+            if (getActivity() != null) {
+                getActivity().invalidateOptionsMenu();
+            }
         }
         //startActivity(intent);
+    }
+
+    public void onEventMainThread(BluetoothGattEvent event) {
+
+        if (event.getAction().equals(BluetoothLeService.ACTION_GATT_CONNECTED)) {
+
+            if (mProgress != null) {
+                mProgress.dismiss();
+            }
+
+            final Intent intent = new Intent(getActivity(), FreeFormActivity.class);
+            startActivity(intent);
+
+        }
+
     }
 
     private void scanLeDevice(final boolean enable) {
@@ -164,8 +199,8 @@ public class DeviceListFragment extends ListFragment {
 
             mScanning = true;
             final UUID[] serviceUuids = new UUID[]{GattAttributes.BLE_SHIELD_SERVICE};
-            mBluetoothAdapter.startLeScan(serviceUuids, mLeScanCallback);
-            //mBluetoothAdapter.startLeScan(mLeScanCallback);
+            //mBluetoothAdapter.startLeScan(serviceUuids, mLeScanCallback);
+            mBluetoothAdapter.startLeScan(mLeScanCallback);
         } else {
             mScanning = false;
             mBluetoothAdapter.stopLeScan(mLeScanCallback);

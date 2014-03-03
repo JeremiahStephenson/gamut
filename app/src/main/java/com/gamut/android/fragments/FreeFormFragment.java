@@ -1,6 +1,7 @@
 package com.gamut.android.fragments;
 
 import android.app.Fragment;
+import android.bluetooth.BluetoothGattCharacteristic;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.gamut.android.R;
+import com.gamut.android.services.BluetoothLeService;
+import com.gamut.android.util.ByteUtil;
 import com.gamut.android.views.ColorGrid;
 import com.gamut.android.views.ColorPickerGrid;
 
@@ -61,11 +64,20 @@ public class FreeFormFragment extends Fragment implements ColorPickerGrid.IOnCol
 
         switch (item.getItemId()) {
             case R.id.menu_clear:
+                sendCommand(ByteUtil.GetClearCommand());
                 mColorGrid.clear();
                 break;
             case R.id.menu_lock:
                 item.setTitle(getString(mColorGrid.getIsLocked() ? R.string.lock : R.string.locked));
                 mColorGrid.setIsLocked(!mColorGrid.getIsLocked());
+                break;
+            case R.id.menu_disconnect:
+                BluetoothLeService.getInstance().disconnect();
+
+                if (getActivity() != null) {
+                    getActivity().finish();
+                }
+
                 break;
         }
 
@@ -76,9 +88,20 @@ public class FreeFormFragment extends Fragment implements ColorPickerGrid.IOnCol
         mColorGrid.setColor(color);
     }
 
+    private void sendCommand(byte[] command) {
+        final BluetoothGattCharacteristic write = BluetoothLeService.getInstance().getWriteCharacteristic();
+        if (write != null) {
+            write.setValue(command);
+            BluetoothLeService.getInstance().writeCharacteristic(write);
+        }
+    }
+
     @Override
     public void OnColorCellChanged(int positionX, int positionY, int color) {
-
+        sendCommand(ByteUtil.GetPixelCommand(positionX, positionY,
+                (byte)((color >> 16) & 0xFF),
+                (byte)((color >> 8) & 0xFF),
+                (byte)(color & 0xFF)));
     }
 
     @Override
