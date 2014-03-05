@@ -14,6 +14,7 @@
     <string name="clear">Clear</string>
     <string name="lock">Lock</string>
     <string name="locked">Locked</string>
+    <string name="color">Color</string>
 
     <string name="ble_not_supported">BLE is not supported</string>
     <string name="title_devices">Iris BLE Device Scan</string>
@@ -25,6 +26,7 @@
     <string name="menu_scan">Scan</string>
     <string name="menu_stop">Stop</string>
     <string name="menu_refresh">Refresh</string>
+    <string name="menu_mario">Mario</string>
 
     <string name="connecting">Connecting&#46;&#46;&#46;</string>
 

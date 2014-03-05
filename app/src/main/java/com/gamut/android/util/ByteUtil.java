@@ -28,7 +28,7 @@ public class ByteUtil
     }
 
     public static byte[] GetPixelCommand(int x, int y, byte r, byte g, byte b) {
-        return new byte[]{ (byte)0xFF, convertIntToByte2(x), convertIntToByte2(y), convertIntToByte(r), convertIntToByte(g), convertIntToByte(b) };
+        return new byte[]{ (byte)0xFF, convertIntToByte2(x), convertIntToByte2(y), convertIntToByte2(r), convertIntToByte2(g), convertIntToByte2(b) };
     }
 
     private static byte convertIntToByte(int x) {

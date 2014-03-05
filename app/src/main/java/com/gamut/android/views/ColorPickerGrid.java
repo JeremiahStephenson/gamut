@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -115,6 +116,31 @@ public class ColorPickerGrid extends View {
     public void clearSelected() {
         mSelected = Color.TRANSPARENT;
         invalidate();
+    }
+
+    public int getSelectedColor() {
+        return mSelected;
+    }
+
+    public void setCustomColor(int color) {
+
+        if (mCells.size() == 0) {
+            return;
+        }
+
+        final ColorCell cell = mCells.get(mCells.size() - 1);
+
+        cell.setColor(color);
+        mSelected = color;
+
+        if (mListener != null) {
+            mListener.OnColorSelected (color);
+        }
+
+        final Rect rect = new Rect();
+        final RectF rectF = cell.getRect();
+        rect.set((int) rectF.left, (int) rectF.top, (int) rectF.right, (int) rectF.bottom);
+        invalidate(rect);
     }
 
     @Override
