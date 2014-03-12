@@ -24,11 +24,17 @@
         android:id="@+id/menu_mario"
         android:title="@string/menu_mario"
         android:orderInCategory="3"
-        android:showAsAction="always"/>
+        android:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/menu_iris"
+        android:title="@string/app_name"
+        android:orderInCategory="4"
+        android:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/menu_disconnect"
         android:title="@string/menu_disconnect"
-        android:orderInCategory="4"
-        android:showAsAction="always"/>
+        android:orderInCategory="5"
+        android:showAsAction="ifRoom"/>
 </menu>

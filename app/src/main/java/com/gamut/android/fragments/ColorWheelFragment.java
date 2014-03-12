@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 
 import com.gamut.android.R;
 import com.larswerkman.holocolorpicker.ColorPicker;
-import com.larswerkman.holocolorpicker.SVBar;
 
 /**
  * Created by user on 3/4/14.
@@ -45,9 +44,9 @@ public class ColorWheelFragment extends DialogFragment {
         }
 
         final ColorPicker picker = (ColorPicker) getView().findViewById(R.id.picker);
-        SVBar svBar = (SVBar) getView().findViewById(R.id.svbar);
+        //SVBar svBar = (SVBar) getView().findViewById(R.id.svbar);
 
-        picker.addSVBar(svBar);
+        //picker.addSVBar(svBar);
         picker.setColor(mDefaultColor);
 
         picker.setOnColorChangedListener(new ColorPicker.OnColorChangedListener() {
