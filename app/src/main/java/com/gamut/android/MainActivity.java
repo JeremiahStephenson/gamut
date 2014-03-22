@@ -117,6 +117,7 @@ public class MainActivity extends MasterActivity
             return true;
         } else if (id == R.id.action_free_form) {
             final Intent intent = new Intent(this, FreeFormActivity.class);
+            intent.putExtra(FreeFormFragment.EXTRA_USE_CHROMECAST, true);
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);

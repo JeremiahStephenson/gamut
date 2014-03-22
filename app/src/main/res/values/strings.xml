@@ -34,4 +34,8 @@
     <string name="unknown_characteristic">Unknown characteristic</string>
     <string name="unknown_service">Unknown service</string>
 
+    <string name="chromecast">Chromecast</string>
+    <string name="app_id">3807C026</string>
+    <string name="namespace">urn:x-cast:com.jerry.iris</string>
+
 </resources>

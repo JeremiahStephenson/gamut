@@ -1,14 +1,14 @@
 package com.gamut.android.activities;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 
 import com.gamut.android.R;
 
 /**
  * Created by user on 12/26/13.
  */
-public class FreeFormActivity extends Activity {
+public class FreeFormActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
